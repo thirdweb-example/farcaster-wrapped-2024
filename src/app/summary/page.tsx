@@ -49,7 +49,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string, isShared: string }> }) {
   const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
   const isShared = await searchParams.then(params => params.isShared === "1");
-  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent("Check out my year onchain!")}%0A%0A${encodeURIComponent(appUrl)}%2Fsummary%3Faddresses%3D${encodeURI(addresses.join(","))}`;
+  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent("Check out my year onchain!")}%0A%0A${encodeURIComponent(appUrl)}%2Fsummary%3Faddresses%3D${encodeURI(addresses.join(","))}&isShared=1`;
 
   const [transactionsResult, chainActivityResult, contractsResult] = await Promise.all([
     getTransactions(addresses),
