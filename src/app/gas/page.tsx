@@ -9,6 +9,7 @@ import { getEthPrice } from "~/lib/get-eth-price";
 import { LinkButton } from "~/components/LinkButton";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ThirdwebClient } from "~/constants";
+import BorderBox from "~/components/BorderBox";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string }> }) {
   const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
@@ -32,121 +33,102 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
 
   return (
     <div className="flex flex-col gap-4 p-6 items-center justify-center h-full">
-      <div className="flex justify-stretch flex-col max-w-xl lg:max-w-4xl lg:flex-row gap-6 lg:items-end">
-        {/* Grid */}
-        <div className="flex flex-row lg:flex-col gap-0 justify-stretch">
-          <div className="w-full">
-            <MotionDiv
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="border p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
-              <div className="text-sm font-medium opacity-75 mb-4">Most expensive tx</div>
-              <div>
-                <span className="text-3xl font-bold translate-y-[1px]">${(formatGasCost(sortedTransactions[0]) * ethPrice).toFixed(4)}</span>
-                <div className="flex gap-1 items-center">
-                  {(() => {
-                    const chain = chains.find(chain => chain.id === sortedTransactions[0].chain_id);
-                    if (!chain?.icon?.url) {
-                      return null;
-                    }
-                    return (
-                      <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
-                    );
-                  })()}
-                  <div className="text-sm font-medium opacity-75">{shortenHex(sortedTransactions[0].hash)}</div>
-                </div>
-              </div>
-            </MotionDiv>
-            <MotionDiv
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0 }}
-              className="border p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
-              <div className="text-sm font-medium opacity-75 mb-4">Cheapest transaction</div>
-              <div>
-                <span className="text-3xl font-bold translate-y-[1px]">${(formatGasCost(sortedTransactions[sortedTransactions.length - 1]) * ethPrice).toFixed(4)}</span>
-                <div className="flex gap-1 items-center">
-                  {(() => {
-                    const chain = chains.find(chain => chain.id === sortedTransactions[sortedTransactions.length - 1].chain_id);
-                    if (!chain?.icon?.url) {
-                      return null;
-                    }
-                    return (
-                      <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
-                    );
-                  })()}
-                  <div className="text-sm font-medium opacity-75">{shortenHex(sortedTransactions[sortedTransactions.length - 1].hash)}</div>
-                </div>
-              </div>
-            </MotionDiv>
-          </div>
-
-          <div className="w-full">
-            <MotionDiv
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="border p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
-              <div className="text-sm font-medium opacity-75 mb-4">Most expensive chain</div>
-              <div>
-                <div className="flex gap-1 items-end">
-                  <span className="text-3xl font-bold translate-y-[1px]">${(sortedChains[0].gasUsed / sortedChains[0].transactions.length * ethPrice).toFixed(4)}</span>
-                  <span className="text-base font-medium opacity-75">/tx</span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  {(() => {
-                    const chain = chains.find(chain => chain.id === sortedChains[0].id);
-                    if (!chain?.icon?.url) {
-                      return null;
-                    }
-                    return (
-                      <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
-                    );
-                  })()}
-                  <div className="text-sm font-medium opacity-75">{sortedChains[0].name}</div>
-                </div>
-
-              </div>
-            </MotionDiv>
-            <MotionDiv
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="border p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
-              <div className="text-sm font-medium opacity-75 mb-4">Cheapeast chain</div>
-              <div>
-                <div className="flex gap-1 items-end">
-                  <span className="text-3xl font-bold translate-y-[1px]">${(sortedChains[sortedChains.length - 1].gasUsed / sortedChains[sortedChains.length - 1].transactions.length * ethPrice).toFixed(4)}</span>
-                  <span className="text-base font-medium opacity-75">/tx</span>
-                </div>
-                <div className="flex gap-1 items-center">
-                  {(() => {
-                    const chain = chains.find(chain => chain.id === sortedChains[sortedChains.length - 1].id);
-                    if (!chain?.icon?.url) {
-                      return null;
-                    }
-                    return (
-                      <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
-                    );
-                  })()}
-                  <div className="text-sm font-medium opacity-75">{sortedChains[sortedChains.length - 1].name}</div>
-                </div>
-              </div>
-            </MotionDiv>
-          </div>
-        </div>
-        {/* Text */}
+      <div className="flex justify-stretch w-full flex-col lg:max-w-4xl lg:flex-row gap-2 lg:items-end">
         <MotionDiv
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="text-4xl lg:text-7xl font-bold flex flex-col gap-2">
-          <div className="opacity-50">
-            Remember spending $100 to mint an NFT?
-          </div>
+          transition={{ delay: 0.3 }}
+          className="p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
+          <div className="text-sm font-medium opacity-75 mb-4">Most expensive tx</div>
           <div>
-            L2s changed everything in 2024.
+            <span className="text-3xl font-bold translate-y-[1px]">${(formatGasCost(sortedTransactions[0]) * ethPrice).toFixed(4)}</span>
+            <div className="flex gap-1 items-center">
+              {(() => {
+                const chain = chains.find(chain => chain.id === sortedTransactions[0].chain_id);
+                if (!chain?.icon?.url) {
+                  return null;
+                }
+                return (
+                  <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
+                );
+              })()}
+              <div className="text-sm font-medium opacity-75">{shortenHex(sortedTransactions[0].hash)}</div>
+            </div>
+          </div>
+        </MotionDiv>
+        <div className="border-t-2 border-dashed w-full" />
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
+          <div className="text-sm font-medium opacity-75 mb-4">Cheapest transaction</div>
+          <div>
+            <span className="text-3xl font-bold translate-y-[1px]">${(formatGasCost(sortedTransactions[sortedTransactions.length - 1]) * ethPrice).toFixed(4)}</span>
+            <div className="flex gap-1 items-center">
+              {(() => {
+                const chain = chains.find(chain => chain.id === sortedTransactions[sortedTransactions.length - 1].chain_id);
+                if (!chain?.icon?.url) {
+                  return null;
+                }
+                return (
+                  <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
+                );
+              })()}
+              <div className="text-sm font-medium opacity-75">{shortenHex(sortedTransactions[sortedTransactions.length - 1].hash)}</div>
+            </div>
+          </div>
+        </MotionDiv>
+        <div className="border-t-2 border-dashed w-full" />
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
+          <div className="text-sm font-medium opacity-75 mb-4">Most expensive chain</div>
+          <div>
+            <div className="flex gap-1 items-end">
+              <span className="text-3xl font-bold translate-y-[1px]">${(sortedChains[0].gasUsed / sortedChains[0].transactions.length * ethPrice).toFixed(4)}</span>
+              <span className="text-base font-medium opacity-75">/tx</span>
+            </div>
+            <div className="flex gap-1 items-center">
+              {(() => {
+                const chain = chains.find(chain => chain.id === sortedChains[0].id);
+                if (!chain?.icon?.url) {
+                  return null;
+                }
+                return (
+                  <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
+                );
+              })()}
+              <div className="text-sm font-medium opacity-75">{sortedChains[0].name}</div>
+            </div>
+          </div>
+        </MotionDiv>
+        <div className="border-t-2 border-dashed w-full" />
+        <MotionDiv
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0 }}
+          className="p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
+          <div className="text-sm font-medium opacity-75 mb-4">Cheapeast chain</div>
+          <div>
+            <div className="flex gap-1 items-end">
+              <span className="text-3xl font-bold translate-y-[1px]">${(sortedChains[sortedChains.length - 1].gasUsed / sortedChains[sortedChains.length - 1].transactions.length * ethPrice).toFixed(4)}</span>
+              <span className="text-base font-medium opacity-75">/tx</span>
+            </div>
+            <div className="flex gap-1 items-center">
+              {(() => {
+                const chain = chains.find(chain => chain.id === sortedChains[sortedChains.length - 1].id);
+                if (!chain?.icon?.url) {
+                  return null;
+                }
+                return (
+                  <img src={resolveScheme({ uri: chain.icon?.url, client: ThirdwebClient })} className="size-4 rounded-full" />
+                );
+              })()}
+              <div className="text-sm font-medium opacity-75">{sortedChains[sortedChains.length - 1].name}</div>
+            </div>
           </div>
         </MotionDiv>
       </div>
