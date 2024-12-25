@@ -25,7 +25,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
   }
 
-  const url = new URL(appUrl);
+  const url = new URL(`${appUrl}/summary`);
   if (fid) {
     url.searchParams.set("fid", fid);
   } else {
