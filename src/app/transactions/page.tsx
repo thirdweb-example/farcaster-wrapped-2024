@@ -29,7 +29,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           </MotionDiv>
         </BorderBox>
         <MotionDiv initial={{ opacity: 0 }} transition={{ dduration: 0.4 }} animate={{ opacity: 1 }} className="text-center text-xl font-medium max-w-lg">
-          You've been busy this year!
+          You&apos;ve been busy this year!
           You executed {transactions?.length} transactions across {chains?.length} chains.
         </MotionDiv>
         <BorderBox>

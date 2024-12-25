@@ -5,6 +5,7 @@ export async function getVerifiedAddresses(fid: number) {
     headers: {
       "x-api-key": process.env.NEYNAR_API_KEY,
       "content-type": "application/json",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any,
   });
 

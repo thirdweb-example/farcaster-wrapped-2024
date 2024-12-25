@@ -6,6 +6,7 @@ export async function getEthPrice() {
     {
       headers: {
         "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
     });
 
@@ -15,6 +16,7 @@ export async function getEthPrice() {
   }
 
   const data = await cmcResult.json();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ethQuote = data.data.ETH.find((quote: any) => quote.symbol === "ETH");
   return ok(ethQuote.quote.USD.price);
 }

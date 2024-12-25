@@ -9,7 +9,6 @@ import { getEthPrice } from "~/lib/get-eth-price";
 import { LinkButton } from "~/components/LinkButton";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ThirdwebClient } from "~/constants";
-import BorderBox from "~/components/BorderBox";
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string }> }) {
   const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
