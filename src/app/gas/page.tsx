@@ -110,7 +110,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           animate={{ opacity: 1 }}
           transition={{ delay: 0 }}
           className="p-4 flex flex-col items-start justify-between h-32 w-full lg:w-64">
-          <div className="text-sm font-medium opacity-75 mb-4">Cheapeast chain</div>
+          <div className="text-sm font-medium opacity-75 mb-4">Cheapest chain</div>
           <div>
             <div className="flex gap-1 items-end">
               <span className="text-3xl font-bold translate-y-[1px]">${(sortedChains[sortedChains.length - 1].gasUsed / sortedChains[sortedChains.length - 1].transactions.length * ethPrice).toFixed(4)}</span>
