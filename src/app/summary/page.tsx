@@ -9,6 +9,7 @@ import { LinkButton } from "~/components/LinkButton";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ShareButton } from "~/components/ShareButton";
 import { Metadata } from "next";
+import { getVerifiedAddresses } from "~/lib/get-verified-addresses";
 
 const appUrl = process.env.NEXT_PUBLIC_URL!;
 
@@ -32,7 +33,6 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
     },
   };
 
-
   return {
     title: "Your Year Onchain",
     openGraph: {
@@ -46,10 +46,15 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 }
 
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string, isShared: string }> }) {
-  const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
-  const isShared = await searchParams.then(params => params.isShared === "1");
-  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent("Check out my year onchain!")}%0A%0A${encodeURIComponent(appUrl)}%2Fsummary%3Faddresses%3D${encodeURI(addresses.join(","))}&isShared=1`;
+export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string, fid: string }> }) {
+  let addresses = [];
+  const fid = await searchParams.then(params => params.fid);
+
+  if (fid) {
+    addresses = await getVerifiedAddresses(Number(fid));
+  } else {
+    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
+  }
 
   const [transactionsResult, chainActivityResult, contractsResult] = await Promise.all([
     getTransactions(addresses),
@@ -110,18 +115,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
         </BorderBox>
       </div>
 
-      <div className="flex w-full justify-between items-center gap-2 mt-8 max-w-4xl">
+      <div className="flex w-full justify-between items-center gap-2 mt-4 max-w-4xl">
         <LinkButton href={`/contracts?addresses=${addresses.join(",")}`}>
           <ChevronLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           Previous
         </LinkButton>
-        {isShared ? (
+        {fid ? (
           <LinkButton href="/">
             See yours
             <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           </LinkButton>
         ) : (
-          <ShareButton href={shareUrl}>
+          <ShareButton>
             Share
             <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           </ShareButton>
