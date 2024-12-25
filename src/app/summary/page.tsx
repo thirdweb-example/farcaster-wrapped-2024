@@ -15,8 +15,22 @@ const appUrl = process.env.NEXT_PUBLIC_URL!;
 
 export const revalidate = 300;
 
-export async function generateMetadata({ searchParams }: { searchParams: Promise<{ addresses: string }> }): Promise<Metadata> {
-  const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ addresses: string, fid: string }> }): Promise<Metadata> {
+  let addresses = [];
+  const fid = await searchParams.then(params => params.fid);
+
+  if (fid) {
+    addresses = await getVerifiedAddresses(Number(fid));
+  } else {
+    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
+  }
+
+  const url = new URL(appUrl);
+  if (fid) {
+    url.searchParams.set("fid", fid);
+  } else {
+    url.searchParams.set("addresses", addresses.join(","));
+  }
 
   const frame = {
     version: "next",
@@ -26,7 +40,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       action: {
         type: "launch_frame",
         name: "My Year Onchain",
-        url: `${appUrl}/summary?addresses=${addresses.join(",")}&isShared=1`,
+        url,
         splashImageUrl: `${appUrl}/splash.png`,
         splashBackgroundColor: "#000000",
       },
