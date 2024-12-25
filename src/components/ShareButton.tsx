@@ -3,9 +3,9 @@
 import { useWarpcast } from "~/hooks/useWarpcast";
 import { LinkButton } from "./LinkButton";
 
-export function ShareButton({ children, ...props }: React.ComponentPropsWithoutRef<"button">) {
+export function ShareButton({ children, topChain, topContract, transactions, ...props }: React.ComponentPropsWithoutRef<"button"> & { topChain?: string, topContract?: string, transactions?: number }) {
   const { openUrl, user } = useWarpcast();
-  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent("Check out my year onchain!")}%0A%0A${encodeURIComponent(process.env.NEXT_PUBLIC_URL!)}%2Fsummary%3Ffid=${user?.fid}`;
+  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(`Check out my year onchain!\n\nTransactions: ${transactions}\nMy top chain: ${topChain}\nMy top contract: ${topContract}`)}&embeds[]=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/summary?fid=${user?.fid}`)}`;
 
   // Fallback to a standard link if we're not in a frame
   if (!user) {

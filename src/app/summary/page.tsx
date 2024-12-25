@@ -140,7 +140,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
             <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           </LinkButton>
         ) : (
-          <ShareButton>
+          <ShareButton topChain={mostActiveChain.name} topContract={mostUsedContract.name || shortenAddress(mostUsedContract.address)} transactions={transactions.length}>
             Share
             <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           </ShareButton>
