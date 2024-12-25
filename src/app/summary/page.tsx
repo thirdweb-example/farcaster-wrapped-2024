@@ -10,6 +10,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { ShareButton } from "~/components/ShareButton";
 import { Metadata } from "next";
 import { getVerifiedAddresses } from "~/lib/get-verified-addresses";
+import WarpcastReady from "~/components/WarpcastReady";
 
 const appUrl = process.env.NEXT_PUBLIC_URL!;
 
@@ -91,6 +92,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
 
   return (
     <div className="flex flex-col items-center justify-center min-h-full max-w-screen gap-2 p-6">
+      <WarpcastReady />
       <h1 className="text-4xl font-bold">My Year Onchain</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3">
         <BorderBox>
