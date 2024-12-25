@@ -25,7 +25,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
       action: {
         type: "launch_frame",
         name: "My Year Onchain",
-        url: `${appUrl}/summary?addresses=${addresses.join(",")}`,
+        url: `${appUrl}/summary?addresses=${addresses.join(",")}&isShared=1`,
         splashImageUrl: `${appUrl}/splash.png`,
         splashBackgroundColor: "#000000",
       },
@@ -46,8 +46,9 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 }
 
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string }> }) {
+export default async function Page({ searchParams }: { searchParams: Promise<{ addresses: string, isShared: string }> }) {
   const addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
+  const isShared = await searchParams.then(params => params.isShared === "1");
   const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent("Check out my year onchain!")}%0A%0A${encodeURIComponent(appUrl)}%2Fsummary%3Faddresses%3D${encodeURI(addresses.join(","))}`;
 
   const [transactionsResult, chainActivityResult, contractsResult] = await Promise.all([
@@ -114,10 +115,17 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           <ChevronLeftIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
           Previous
         </LinkButton>
-        <ShareButton href={shareUrl}>
-          Share
-          <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
-        </ShareButton>
+        {isShared ? (
+          <LinkButton href="/">
+            See yours
+            <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
+          </LinkButton>
+        ) : (
+          <ShareButton href={shareUrl}>
+            Share
+            <ChevronRightIcon className="w-4 h-4 group-hover:-translate-x-1 transition-all duration-200" />
+          </ShareButton>
+        )}
       </div>
     </div>
   );

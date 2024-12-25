@@ -31,7 +31,12 @@ async function getTransactionsForChain<ChainId extends number>(address: string, 
   let batchLength = 0;
   let page = 1;
   do {
-    const result = await fetch(`https://${chain}.insight.thirdweb.com/v1/transactions?filter_block_timestamp_gt=1704067200&filter_from_address=${address}&limit=250&clientId=${process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}&page=${page}`);
+    const result = await fetch(`https://${chain}.insight.thirdweb.com/v1/transactions?filter_block_timestamp_gt=1704067200&filter_from_address=${address}&limit=250&page=${page}`, {
+      headers: {
+        "x-secret-key": process.env.THIRDWEB_SECRET_KEY,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
+    });
 
     if (!result.ok) {
       const error = await result.text();
