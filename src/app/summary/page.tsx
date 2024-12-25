@@ -71,7 +71,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
   const mostUsedContract = contracts.sort((a, b) => b.transactions.length - a.transactions.length)[0];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-full max-w-screen gap-4 p-6 py-16">
+    <div className="flex flex-col items-center justify-center min-h-full max-w-screen gap-2 p-6">
       <h1 className="text-4xl font-bold">My Year Onchain</h1>
       <div className="grid grid-cols-1 lg:grid-cols-3">
         <BorderBox>
