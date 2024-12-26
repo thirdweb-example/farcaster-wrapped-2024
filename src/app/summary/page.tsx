@@ -21,11 +21,13 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   let addresses = [];
   const fid = await searchParams.then(params => params.fid);
 
-  if (fid) {
+  if (typeof fid !== "undefined" && fid.length > 0) {
     addresses = await getVerifiedAddresses(Number(fid));
   } else {
     addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
   }
+
+
 
   const url = new URL(`${appUrl}/summary`);
   if (fid) {
