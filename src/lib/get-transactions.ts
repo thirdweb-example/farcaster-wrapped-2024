@@ -31,7 +31,7 @@ async function getTransactionsForChain<ChainId extends number>(address: string, 
   let batchLength = 0;
   let page = 1;
   do {
-    const result = await fetch(`https://${chain}.insight.thirdweb.com/v1/transactions?filter_block_timestamp_gt=1704067200&filter_from_address=${address}&limit=2000&page=${page}`, {
+    const result = await fetch(`https://${chain}.insight.thirdweb.com/v1/transactions?filter_block_timestamp_gt=1704067200&filter_from_address=${address}&limit=250&page=${page}`, {
       headers: {
         "x-secret-key": process.env.THIRDWEB_SECRET_KEY,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,10 +45,10 @@ async function getTransactionsForChain<ChainId extends number>(address: string, 
     }
 
     const batch = await result.json();
-    batchLength = batch.length;
+    batchLength = batch.data.length;
     data = [...data, ...batch.data];
     page++;
-  } while (batchLength === 2000);
+  } while (batchLength === 250);
 
   txCache.set(cacheKey, data);
 
