@@ -1,5 +1,5 @@
 import React from "react";
-import { getAddress, shortenAddress } from "thirdweb/utils";
+import { checksumAddress, getAddress, shortenAddress } from "thirdweb/utils";
 import { getTransactions } from "~/lib/get-transactions";
 import { getChainActivity } from "~/lib/get-chain-activity";
 import { getContractActivity } from "~/lib/get-contract-activity";
@@ -67,7 +67,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
   if (fid) {
     addresses = await getVerifiedAddresses(Number(fid));
   } else {
-    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
+    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => checksumAddress(address)) ?? []);
   }
 
   const [transactionsResult, chainActivityResult, contractsResult] = await Promise.all([
@@ -104,7 +104,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
           </MotionDiv>
         </BorderBox>
 
-        <BorderBox>
+        {mostActiveChain && <BorderBox>
           <MotionDiv
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -114,9 +114,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
             <div className="text-3xl font-bold">{mostActiveChain.name}</div>
             <div className="text-lg font-medium text-opacity-50">Most Active Chain</div>
           </MotionDiv>
-        </BorderBox>
+        </BorderBox>}
 
-        <BorderBox>
+        {mostUsedContract && <BorderBox>
           <MotionDiv
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -126,7 +126,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
             <div className="text-3xl font-bold">{mostUsedContract.name || shortenAddress(mostUsedContract.address)}</div>
             <div className="text-lg font-medium text-opacity-50">Most Used Contract</div>
           </MotionDiv>
-        </BorderBox>
+        </BorderBox>}
       </div>
 
       <div className="flex w-full justify-between items-center gap-2 mt-4 max-w-4xl">
