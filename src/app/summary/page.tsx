@@ -1,5 +1,6 @@
 import React from "react";
-import { checksumAddress, getAddress, shortenAddress } from "thirdweb/utils";
+
+import { getAddress, shortenAddress } from "thirdweb/utils";
 import { getTransactions } from "~/lib/get-transactions";
 import { getChainActivity } from "~/lib/get-chain-activity";
 import { getContractActivity } from "~/lib/get-contract-activity";
@@ -13,7 +14,8 @@ import { getVerifiedAddresses } from "~/lib/get-verified-addresses";
 
 const appUrl = process.env.NEXT_PUBLIC_URL!;
 
-export const revalidate = 300;
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ addresses: string, fid: string }> }): Promise<Metadata> {
   let addresses = [];
@@ -64,11 +66,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
   let addresses = [];
   const fid = await searchParams.then(params => params.fid);
 
-  if (fid) {
+  if (typeof fid !== "undefined") {
     if (fid.length === 0) return <div>Error: Missing FID</div>;
     addresses = await getVerifiedAddresses(Number(fid));
   } else {
-    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => checksumAddress(address)) ?? []);
+    addresses = await searchParams.then(params => params.addresses?.split(",").map(address => getAddress(address)) ?? []);
   }
 
   if (addresses.length === 0) return <div>No verified addresses found</div>;

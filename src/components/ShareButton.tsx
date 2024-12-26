@@ -1,15 +1,15 @@
 "use client";
 
 import { useWarpcast } from "~/hooks/useWarpcast";
-import { LinkButton } from "./LinkButton";
+import { useMemo } from "react";
 
 export function ShareButton({ children, topChain, topContract, transactions, ...props }: React.ComponentPropsWithoutRef<"button"> & { topChain?: string, topContract?: string, transactions?: number }) {
   const { openUrl, user } = useWarpcast();
-  const shareUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(`Check out my year onchain!\n\nTransactions: ${transactions}\nMy top chain: ${topChain}\nMy top contract: ${topContract}`)}&embeds[]=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/summary?fid=${user?.fid}`)}`;
+  const shareUrl = useMemo(() => `https://warpcast.com/~/compose?text=${encodeURIComponent(`Check out my year onchain!\n\nTransactions: ${transactions}\nMy top chain: ${topChain}\nMy top contract: ${topContract}`)}&embeds[]=${encodeURIComponent(`${process.env.NEXT_PUBLIC_URL}/summary?fid=${user?.fid}`)}`, [user]);
 
-  // Fallback to a standard link if we're not in a frame
+  // Show nothing if we're not in a frame
   if (!user) {
-    return <LinkButton target="_blank" href={shareUrl}>{children}</LinkButton>;
+    return <div />;
   }
 
   return (
