@@ -13,7 +13,7 @@ export function ShareButton({ children, topChain, topContract, transactions, ...
   }
 
   return (
-    <button onClick={() => openUrl(shareUrl)} className="bg-foreground text-background rounded-full py-2 px-4 font-semibold flex justify-between items-center gap-1 group relative z-10 transition-all duration-200" {...props}>
+    <button disabled={!user} onClick={() => openUrl(shareUrl)} className="disabled:animate-pulse bg-foreground text-background rounded-full py-2 px-4 font-semibold flex justify-between items-center gap-1 group relative z-10 transition-all duration-200" {...props}>
       {children}
     </button>
   );

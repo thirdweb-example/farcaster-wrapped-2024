@@ -65,10 +65,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ a
   const fid = await searchParams.then(params => params.fid);
 
   if (fid) {
+    if (fid.length === 0) return <div>Error: Missing FID</div>;
     addresses = await getVerifiedAddresses(Number(fid));
   } else {
     addresses = await searchParams.then(params => params.addresses?.split(",").map(address => checksumAddress(address)) ?? []);
   }
+
+  if (addresses.length === 0) return <div>No verified addresses found</div>;
 
   const [transactionsResult, chainActivityResult, contractsResult] = await Promise.all([
     getTransactions(addresses),
